@@ -15,9 +15,9 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
 	_ "github.com/jackc/pgx/v5/stdlib" // "pgx" driver (PostgreSQL)
-	"github.com/kazuha/alerthub/server/internal/alert"
-	_ "modernc.org/sqlite" // "sqlite" driver (pure Go)
+	_ "modernc.org/sqlite"             // "sqlite" driver (pure Go)
 )
 
 // execer is the subset of *sql.DB and *sql.Tx that the query wrappers use. A

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
 )
 
 // These tests run only when ALERTHUB_TEST_PG_DSN points at a disposable Postgres

@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
-	"github.com/kazuha/alerthub/server/internal/auth"
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/auth"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 // Route-level coverage for the handlers that carry security or tenancy meaning.

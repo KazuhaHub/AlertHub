@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
-	"github.com/kazuha/alerthub/server/internal/scenario"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/scenario"
 )
 
 // GET /api/scenarios — the one-tap templates every client should offer.

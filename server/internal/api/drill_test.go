@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 func drillCfg(window time.Duration) DrillConfig {

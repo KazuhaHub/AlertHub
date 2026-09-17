@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
-	"github.com/kazuha/alerthub/server/internal/cap"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/cap"
 )
 
 const eqXML = `<?xml version="1.0"?>

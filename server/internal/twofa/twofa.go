@@ -13,8 +13,8 @@ import (
 
 	"github.com/pquerna/otp/totp"
 
-	"github.com/kazuha/alerthub/server/internal/secretbox"
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/secretbox"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 type Service struct {

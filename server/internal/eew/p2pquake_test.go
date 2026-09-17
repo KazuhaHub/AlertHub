@@ -4,7 +4,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/kazuha/alerthub/server/internal/eew"
+	"github.com/KazuhaHub/AlertHub/server/internal/eew"
 )
 
 const p2pEEW = `{

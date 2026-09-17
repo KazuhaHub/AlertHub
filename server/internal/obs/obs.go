@@ -20,7 +20,7 @@ import (
 
 // Build identity. version/commit are injected at link time:
 //
-//	go build -ldflags "-X github.com/kazuha/alerthub/server/internal/obs.version=v1.2.3"
+//	go build -ldflags "-X github.com/KazuhaHub/AlertHub/server/internal/obs.version=v1.2.3"
 //
 // A self-hosted product has to be able to answer "what are you running?" — from
 // a log line, from /readyz, and from Prometheus.

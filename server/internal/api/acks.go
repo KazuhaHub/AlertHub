@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 // TopicAckFilter matches every per-device ack: alerts/<alertID>/ack/<deviceID>.

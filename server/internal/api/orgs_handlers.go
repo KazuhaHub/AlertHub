@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 type orgDTO struct {

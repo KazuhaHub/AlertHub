@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
 )
 
 // These tests exercise the SQLite (Starter-tier) code path, which is what

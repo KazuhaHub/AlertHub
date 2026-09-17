@@ -18,7 +18,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
 )
 
 type Config struct {

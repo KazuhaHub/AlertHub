@@ -18,7 +18,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
 )
 
 func main() {

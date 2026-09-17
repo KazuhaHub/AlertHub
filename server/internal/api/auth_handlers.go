@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/kazuha/alerthub/server/internal/auth"
-	"github.com/kazuha/alerthub/server/internal/metrics"
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/auth"
+	"github.com/KazuhaHub/AlertHub/server/internal/metrics"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 type userDTO struct {

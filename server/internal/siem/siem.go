@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 // cursorName is the durable position of the exporter in the audit log.

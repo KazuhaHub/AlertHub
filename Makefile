@@ -44,8 +44,8 @@ web-dev:
 # alerthub_build_info metric can answer "what are you running?".
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 COMMIT  ?= $(shell git rev-parse --short=12 HEAD 2>/dev/null || echo unknown)
-LDFLAGS := -X github.com/kazuha/alerthub/server/internal/obs.version=$(VERSION) \
-           -X github.com/kazuha/alerthub/server/internal/obs.commit=$(COMMIT)
+LDFLAGS := -X github.com/KazuhaHub/AlertHub/server/internal/obs.version=$(VERSION) \
+           -X github.com/KazuhaHub/AlertHub/server/internal/obs.commit=$(COMMIT)
 
 build: web-build
 	go build -ldflags "$(LDFLAGS)" -o bin/alerthub ./server

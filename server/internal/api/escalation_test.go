@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
 )
 
 func ackAlert(sev string, ttl int64) *alert.Alert {

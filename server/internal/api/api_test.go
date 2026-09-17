@@ -19,13 +19,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
-	"github.com/kazuha/alerthub/server/internal/auth"
-	"github.com/kazuha/alerthub/server/internal/broker"
-	"github.com/kazuha/alerthub/server/internal/delivery"
-	"github.com/kazuha/alerthub/server/internal/passkey"
-	"github.com/kazuha/alerthub/server/internal/store"
-	"github.com/kazuha/alerthub/server/internal/twofa"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/auth"
+	"github.com/KazuhaHub/AlertHub/server/internal/broker"
+	"github.com/KazuhaHub/AlertHub/server/internal/delivery"
+	"github.com/KazuhaHub/AlertHub/server/internal/passkey"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/twofa"
 )
 
 const testAdminToken = "test-admin-token"
