@@ -1,6 +1,6 @@
 module github.com/KazuhaHub/AlertHub
 
-go 1.26
+go 1.26.0
 
 // Pinned: go1.26.6 carries the fixes for the stdlib advisories govulncheck
 // flags at 1.26.4 (net/url, crypto/tls, net/http, encoding/xml, encoding/asn1).
@@ -17,9 +17,9 @@ require (
 	github.com/mochi-mqtt/server/v2 v2.7.9
 	github.com/pquerna/otp v1.5.0
 	github.com/prometheus/client_golang v1.23.2
-	golang.org/x/crypto v0.53.0
+	golang.org/x/crypto v0.57.0
 	golang.org/x/oauth2 v0.36.0
-	golang.org/x/text v0.39.0
+	golang.org/x/text v0.42.0
 	modernc.org/sqlite v1.52.0
 )
 
@@ -53,8 +53,8 @@ require (
 	github.com/tinylib/msgp v1.6.4 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
-	golang.org/x/sync v0.21.0 // indirect
-	golang.org/x/sys v0.46.0 // indirect
+	golang.org/x/sync v0.23.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
 	google.golang.org/protobuf v1.36.8 // indirect
 	modernc.org/libc v1.72.3 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
