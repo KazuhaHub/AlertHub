@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
 )
 
 type capture struct {

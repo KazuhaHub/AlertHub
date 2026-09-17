@@ -10,9 +10,9 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/kazuha/alerthub/server/internal/metrics"
-	"github.com/kazuha/alerthub/server/internal/sso"
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/metrics"
+	"github.com/KazuhaHub/AlertHub/server/internal/sso"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 // One-time SSO bridge: the callback issues tokens, stashes them under a one-time

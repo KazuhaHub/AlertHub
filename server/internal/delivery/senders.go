@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
 )
 
 // WebhookSender POSTs the signed alert envelope to each configured URL (all

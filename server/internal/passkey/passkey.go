@@ -14,9 +14,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 	"github.com/go-webauthn/webauthn/protocol"
 	"github.com/go-webauthn/webauthn/webauthn"
-	"github.com/kazuha/alerthub/server/internal/store"
 )
 
 type Service struct {

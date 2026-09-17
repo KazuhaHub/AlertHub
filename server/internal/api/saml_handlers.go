@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/kazuha/alerthub/server/internal/metrics"
+	"github.com/KazuhaHub/AlertHub/server/internal/metrics"
 )
 
 // GET /api/auth/saml/login — redirect to the IdP SSO (HTTP-Redirect binding).

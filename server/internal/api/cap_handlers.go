@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
-	"github.com/kazuha/alerthub/server/internal/cap"
-	"github.com/kazuha/alerthub/server/internal/metrics"
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/cap"
+	"github.com/KazuhaHub/AlertHub/server/internal/metrics"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 // oneline strips CR/LF so CAP-sourced text is safe for the signed canonical form

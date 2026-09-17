@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
 )
 
 // Document is the subset of CAP 1.2 we consume (XML, default namespace matched by

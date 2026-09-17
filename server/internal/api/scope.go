@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/kazuha/alerthub/server/internal/auth"
+	"github.com/KazuhaHub/AlertHub/server/internal/auth"
 )
 
 // apiKeyPrefix marks a service-account API key (vs a human JWT).

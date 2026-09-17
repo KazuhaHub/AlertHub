@@ -1,4 +1,4 @@
-module github.com/kazuha/alerthub
+module github.com/KazuhaHub/AlertHub
 
 go 1.26
 

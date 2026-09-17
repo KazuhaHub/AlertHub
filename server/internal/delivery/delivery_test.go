@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 // fakeSender fails its first failN Send calls, then succeeds; counts calls.

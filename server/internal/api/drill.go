@@ -17,8 +17,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 // DrillConfig controls when the drill fires and how long it waits for answers.

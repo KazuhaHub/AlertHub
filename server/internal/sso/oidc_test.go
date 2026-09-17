@@ -14,7 +14,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 
-	"github.com/kazuha/alerthub/server/internal/sso"
+	"github.com/KazuhaHub/AlertHub/server/internal/sso"
 )
 
 // mockIDP is a minimal OIDC provider: discovery + JWKS + token endpoint returning

@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/kazuha/alerthub/server/internal/auth"
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/auth"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 // Audit action names. Kept as constants so a typo cannot silently create a

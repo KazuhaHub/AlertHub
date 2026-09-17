@@ -23,8 +23,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
-	"github.com/kazuha/alerthub/server/internal/metrics"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/metrics"
 )
 
 // Phase thresholds per SPEC-SAFETY §5. emergency escalates roughly twice as fast

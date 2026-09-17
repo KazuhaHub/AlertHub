@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
-	"github.com/kazuha/alerthub/server/internal/scenario"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/scenario"
 )
 
 // The five canonical scenarios from §6.3 must all be present and each must carry

@@ -17,9 +17,9 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/kazuha/alerthub/server/internal/alert"
-	"github.com/kazuha/alerthub/server/internal/metrics"
-	"github.com/kazuha/alerthub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/alert"
+	"github.com/KazuhaHub/AlertHub/server/internal/metrics"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
 )
 
 // Sender delivers an alert payload to one target on a specific channel.

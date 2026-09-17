@@ -8,8 +8,8 @@ import (
 
 	"github.com/pquerna/otp/totp"
 
-	"github.com/kazuha/alerthub/server/internal/store"
-	"github.com/kazuha/alerthub/server/internal/twofa"
+	"github.com/KazuhaHub/AlertHub/server/internal/store"
+	"github.com/KazuhaHub/AlertHub/server/internal/twofa"
 )
 
 func TestEnrollVerifyRecovery(t *testing.T) {
