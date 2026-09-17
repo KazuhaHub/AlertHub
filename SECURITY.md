@@ -45,5 +45,6 @@ Vulnerability Reporting）。
 - 改掉 `ALERTHUB_ADMIN_TOKEN`、`ALERTHUB_MQTT_PW`、`ALERTHUB_CLIENT_PW` 的默认值。
 - 用最小权限数据库角色连接 Postgres，使 RLS 真正生效（超级用户会绕过 RLS）——见 [docs/POSTGRES.md](docs/POSTGRES.md)。
 - 通过 TLS 暴露 HTTP 与 MQTT/WS（反向代理或 MQTTS）；`/pubkey` 会下发浏览器客户端的 broker 口令。
+- 用反向代理时，把它的地址告诉 `ALERTHUB_TRUSTED_PROXIES`（默认 `loopback`，即同机代理）。限流与审计都按客户端地址取值：代理不受信时所有请求看起来来自同一个地址，5 个凭证端点共享的限流器会塌成全站配额，反过来成为拒绝服务的杠杆。代理与服务不同机时**必须**显式填它的地址或网段。
 - 备份并严格保护 `keys/`：Ed25519 私钥是签发告警的唯一凭据，JWT secret 与 KEK 也在其中。
 - 保持依赖更新：CI 的 `vuln` job 会跑 `govulncheck` 与 `npm audit`。

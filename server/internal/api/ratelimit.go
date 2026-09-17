@@ -1,7 +1,6 @@
 package api
 
 import (
-	"net"
 	"net/http"
 	"strconv"
 	"sync"
@@ -53,21 +52,21 @@ func (rl *rateLimiter) allow(key string) bool {
 	return true
 }
 
-// clientIP is the rate-limit key: the peer address. We deliberately do NOT trust
-// X-Forwarded-For (spoofable); a self-host behind a trusted proxy that wants XFF
-// keying would add it explicitly.
-func clientIP(r *http.Request) string {
-	if host, _, err := net.SplitHostPort(r.RemoteAddr); err == nil {
-		return host
-	}
-	return r.RemoteAddr
+// clientIP is the rate-limit key and the address recorded in the audit trail.
+//
+// X-Forwarded-For is believed only when the request arrived from a peer listed in
+// ALERTHUB_TRUSTED_PROXIES; with none configured this is the TCP peer address,
+// exactly as it was before that setting existed. See TrustedProxies for why
+// getting this wrong breaks the limiter in both directions.
+func (s *Server) clientIP(r *http.Request) string {
+	return s.TrustedProxies.ClientIP(r)
 }
 
 // rateLimit wraps h, rejecting a client (keyed by IP) that exceeds rl with 429 +
 // Retry-After. Applied to the credential-verification endpoints only.
 func (s *Server) rateLimit(rl *rateLimiter, h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if !rl.allow(clientIP(r)) {
+		if !rl.allow(s.clientIP(r)) {
 			w.Header().Set("Retry-After", strconv.Itoa(int(rl.window.Seconds())))
 			http.Error(w, "too many requests", http.StatusTooManyRequests)
 			return
