@@ -19,6 +19,7 @@ jobs:
   go:
     name: Go build + test (sqlite)
     runs-on: ubuntu-latest
+    needs: web-admin
     steps:
       - uses: actions/checkout@v4
 
@@ -37,6 +38,21 @@ jobs:
             exit 1
           fi
 
+      - name: fetch the built admin assets
+        uses: actions/download-artifact@v4
+        with:
+          name: webadmin-dist-assets
+          path: server/internal/webadmin/dist/assets
+
+      # A missing or empty assets/ makes the hashed-asset cache test skip
+      # instead of fail, so assert the artifact really landed.
+      - name: assert the admin assets are present (test must not silently skip)
+        run: |
+          if [ -z "$(ls -A server/internal/webadmin/dist/assets 2>/dev/null)" ]; then
+            echo "::error::dist/assets is empty; the hashed-asset cache test would skip"
+            exit 1
+          fi
+
       - name: go vet
         run: go vet ./server/...
 
@@ -52,6 +68,7 @@ jobs:
   postgres:
     name: Go test (postgres + RLS)
     runs-on: ubuntu-latest
+    needs: web-admin
     services:
       postgres:
         image: postgres:16
@@ -72,6 +89,21 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
+
+      - name: fetch the built admin assets
+        uses: actions/download-artifact@v4
+        with:
+          name: webadmin-dist-assets
+          path: server/internal/webadmin/dist/assets
+
+      # A missing or empty assets/ makes the hashed-asset cache test skip
+      # instead of fail, so assert the artifact really landed.
+      - name: assert the admin assets are present (test must not silently skip)
+        run: |
+          if [ -z "$(ls -A server/internal/webadmin/dist/assets 2>/dev/null)" ]; then
+            echo "::error::dist/assets is empty; the hashed-asset cache test would skip"
+            exit 1
+          fi
 
       - name: go test (Postgres-gated tests active)
         env:
@@ -164,3 +196,15 @@ jobs:
       - name: typecheck + build
         working-directory: web-admin
         run: npm run build
+
+      # dist/index.html is committed and names content-hashed chunks, but
+      # dist/assets/ is gitignored. The Go jobs therefore embed an index.html
+      # pointing at files that are not in the checkout, which is what made
+      # TestCachePolicy_HashedAssetsAreImmutable fail. Publish the assets here
+      # so the Go jobs embed a dist/ that is internally consistent.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: webadmin-dist-assets
+          path: server/internal/webadmin/dist/assets
+          if-no-files-found: error
+          retention-days: 1
