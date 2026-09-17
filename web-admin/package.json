@@ -12,7 +12,7 @@
   "dependencies": {
     "@ant-design/icons": "^6.3.2",
     "@material/material-color-utilities": "^0.4.0",
-    "@simplewebauthn/browser": "^13.3.0",
+    "@simplewebauthn/browser": "^14.0.0",
     "antd": "^6.6.0",
     "axios": "^1.17.0",
     "i18next": "^26.3.1",
