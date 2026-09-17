@@ -227,9 +227,35 @@ func main() {
 		}
 	}
 	deliveryMgr := delivery.New(st, delivery.Config{}, senders...)
+	// The rate limiter and the audit trail both key on the client address, so a
+	// deployment that terminates TLS at a reverse proxy (as SECURITY.md
+	// recommends) has to say which peers may speak for a client. Left unset, the
+	// TCP peer is used and X-Forwarded-For is ignored -- the behaviour of every
+	// release before this setting existed.
+	// Default: a proxy on the same host. That is the deployment SECURITY.md
+	// describes, and spoofing X-Forwarded-For past it requires already being on
+	// the machine. Set "none" to key on the TCP peer unconditionally.
+	trustedProxies, err := api.ParseTrustedProxies(env("ALERTHUB_TRUSTED_PROXIES", "loopback"))
+	if err != nil {
+		// Falling back means the limiter keys on the proxy again, so say exactly
+		// what that costs instead of letting a typo quietly undo the setting.
+		slog.Error("ALERTHUB_TRUSTED_PROXIES is invalid; ignoring X-Forwarded-For. "+
+			"Behind a reverse proxy every client now shares one rate-limit bucket "+
+			"and the audit trail records the proxy address",
+			"err", err)
+		trustedProxies = api.TrustedProxies{}
+	}
+	switch {
+	case trustedProxies.Configured():
+		log.Printf("trusted proxies: %s (X-Forwarded-For honoured from these peers)", env("ALERTHUB_TRUSTED_PROXIES", "loopback"))
+	default:
+		log.Printf("trusted proxies: none (X-Forwarded-For ignored; every client behind a reverse proxy shares one rate-limit bucket)")
+	}
+
 	srv := &api.Server{
 		Broker: b, Store: st, Priv: priv, PubB64url: pubB64,
 		AdminToken: adminToken, WebDir: webDir,
+		TrustedProxies: trustedProxies,
 		// Rotation overlap: keys listed here are accepted but never used to sign.
 		PubB64urlExtra: splitCSV(env("ALERTHUB_PUBKEYS_EXTRA", "")),
 		WSPort:         wsPort, ClientUser: cliUser, ClientPass: cliPass,
