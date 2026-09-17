@@ -55,7 +55,7 @@ func (s *Server) audit(r *http.Request, orgID int64, action, targetType, targetI
 	e := &store.AuditEntry{
 		OrgID: orgID, ActorType: kind, ActorID: id, ActorName: name,
 		Action: action, TargetType: targetType, TargetID: targetID,
-		Detail: detail, IP: clientIP(r),
+		Detail: detail, IP: s.clientIP(r),
 	}
 	if err := s.Store.AppendAudit(e); err != nil {
 		slog.Error("audit append failed", "action", action, "org_id", orgID, "err", err)
@@ -126,7 +126,7 @@ func (s *Server) auditLoginAttempt(r *http.Request, upn string, ok bool) {
 	}
 	e := &store.AuditEntry{
 		OrgID: s.DefaultOrgID, ActorType: store.ActorUser, ActorName: upn,
-		Action: action, TargetType: "user", TargetID: upn, Detail: detail, IP: clientIP(r),
+		Action: action, TargetType: "user", TargetID: upn, Detail: detail, IP: s.clientIP(r),
 	}
 	if err := s.Store.AppendAudit(e); err != nil {
 		slog.Error("audit append failed", "action", action, "err", err)

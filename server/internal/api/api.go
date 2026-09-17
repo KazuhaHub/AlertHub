@@ -49,6 +49,10 @@ type Server struct {
 	AdminToken     string
 	WebDir         string
 
+	// TrustedProxies decides whether X-Forwarded-For may be believed. The zero
+	// value trusts nothing, which is how every release before it behaved.
+	TrustedProxies TrustedProxies
+
 	// Browser-client bootstrap info served at /pubkey (SPEC §7/§8). The client
 	// MQTT password is not a real secret in a browser — the trust anchor is the
 	// signature and the ACL that forbids clients from writing alert channels.
