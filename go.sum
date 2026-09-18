@@ -1,5 +1,3 @@
-github.com/KazuhaHub/authcore v0.2.0 h1:Z5ezkCmCBGPMItNWEjwyEkbTbY4c3nrIq/r5HXt/P7g=
-github.com/KazuhaHub/authcore v0.2.0/go.mod h1:ARcronV/ULV12fWRztXH8hW/E/z2PKlOIhkpWolFIVs=
 github.com/beevik/etree v1.7.0 h1:xjBk9O4p4x7D1YajePjfLzdaFC4/uYUENA7P0pv6gXA=
 github.com/beevik/etree v1.7.0/go.mod h1:bh4zJxiIr62SOf9pRzN7UUYaEDa9HEKafK25+sLc0Gc=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=

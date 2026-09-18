@@ -6,23 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/KazuhaHub/authcore/clientip"
 )
-
-// The client-address logic this file used to test in isolation -- parsing the
-// trusted-proxy spec, the zero value, and the right-to-left walk -- moved to
-// authcore/clientip, which tests all three and verifies them by mutation rather
-// than by passing. The unit-level cases were removed here rather than copied:
-// duplicating them would mean two suites to update for one behaviour, and the
-// copy in this repository would not be the one that fails when the package
-// regresses.
-//
-// What stays is the wiring, which the package cannot test for AlertHub: that the
-// credential limiter actually keys on the resolved address, that a spoofed
-// header cannot mint keys, and that the audit trail records the same address the
-// limiter used. Those exercise the walk end to end through the real handler, so
-// the behaviour is still covered here even though its unit tests are elsewhere.
 
 // postLoginVia sends a failing login the way a reverse proxy would deliver it:
 // the TCP peer is the proxy, and the real client address is in X-Forwarded-For.
@@ -45,7 +29,11 @@ func postLoginVia(t *testing.T, ts *testServer, peer, xff string) int {
 
 func trustLoopback(t *testing.T, ts *testServer) {
 	t.Helper()
-	ts.srv.TrustedProxies = clientip.Loopback()
+	tp, err := ParseTrustedProxies("loopback")
+	if err != nil {
+		t.Fatalf("ParseTrustedProxies: %v", err)
+	}
+	ts.srv.TrustedProxies = tp
 }
 
 // TestRateLimit_BehindReverseProxy_KeepsPerClientBudgets is the deployment
@@ -95,28 +83,73 @@ func TestRateLimit_SpoofedForwardedForFromUntrustedPeerIsIgnored(t *testing.T) {
 	}
 }
 
-// TestRateLimit_UnparseableHopFallsBackToThePeer is the wiring half of
-// Report-Portal#15's fix, reached through the real handler: a chain the walk
-// cannot verify must not hand the limiter an address nobody vouched for. The
-// request carries a forged address to the left of a hop that does not parse, so
-// believing anything past that hop would key the limiter on the attacker's
-// chosen value.
-func TestRateLimit_UnparseableHopFallsBackToThePeer(t *testing.T) {
-	ts := newTestServer(t)
-	trustLoopback(t, ts)
+// TestRateLimit_ForwardedChainStopsAtTheFirstUntrustedHop covers the walk itself:
+// with two chained trusted proxies, the client is the rightmost address that is
+// not one of them -- and addresses the client wrote itself, further left, are
+// never reached.
+func TestRateLimit_ForwardedChainStopsAtTheFirstUntrustedHop(t *testing.T) {
+	tp, err := ParseTrustedProxies("loopback,10.0.0.0/8")
+	if err != nil {
+		t.Fatalf("ParseTrustedProxies: %v", err)
+	}
+	r := httptest.NewRequest(http.MethodGet, "/", nil)
+	r.RemoteAddr = "127.0.0.1:9999"
+	// Client forged "1.1.1.1", then the real client 203.0.113.9 was appended by
+	// the outer proxy, then 10.1.2.3 by the inner one.
+	r.Header.Set("X-Forwarded-For", "1.1.1.1, 203.0.113.9, 10.1.2.3")
+	if got := tp.ClientIP(r); got != "203.0.113.9" {
+		t.Fatalf("ClientIP = %q, want 203.0.113.9 (the first untrusted hop from the right)", got)
+	}
+}
 
-	// The peer is the trusted proxy; the chain is (right to left)
-	// 127.0.0.1, then garbage. Believing past the garbage would return 9.9.9.9.
-	const peer = "127.0.0.1:54321"
-	for i := 0; i < 12; i++ {
-		// A different forged address each time, so a limiter keyed on the forged
-		// value would never block and the budget would never be spent.
-		forged := "9.9.9." + string(rune('0'+i%10))
-		if code := postLoginVia(t, ts, peer, forged+", garbage, 127.0.0.1"); code == http.StatusTooManyRequests {
-			return // keyed on the peer, as it must be
+// TestTrustedProxies_ZeroValueIgnoresForwardedFor pins the compatibility promise:
+// unconfigured, the behaviour is exactly what it was before this type existed.
+func TestTrustedProxies_ZeroValueIgnoresForwardedFor(t *testing.T) {
+	var tp TrustedProxies
+	r := httptest.NewRequest(http.MethodGet, "/", nil)
+	r.RemoteAddr = "127.0.0.1:9999"
+	r.Header.Set("X-Forwarded-For", "203.0.113.9")
+	if got := tp.ClientIP(r); got != "127.0.0.1" {
+		t.Fatalf("ClientIP = %q, want the peer 127.0.0.1", got)
+	}
+}
+
+func TestParseTrustedProxies(t *testing.T) {
+	for _, tc := range []struct {
+		spec       string
+		wantErr    bool
+		configured bool
+	}{
+		{"", false, false},
+		{"none", false, false},
+		{"NONE", false, false},
+		{"loopback", false, true},
+		{"10.0.0.0/8", false, true},
+		{"192.168.1.7", false, true},
+		{"loopback, 10.0.0.0/8 ,192.168.1.7", false, true},
+		{"::1", false, true},
+		{"all", true, false},
+		{"*", true, false},
+		{"0.0.0.0/0", true, false},
+		{"::/0", true, false},
+		{"not-an-address", true, false},
+		{"10.0.0.0/99", true, false},
+	} {
+		tp, err := ParseTrustedProxies(tc.spec)
+		if tc.wantErr {
+			if err == nil {
+				t.Errorf("ParseTrustedProxies(%q) = nil error, want one", tc.spec)
+			}
+			continue
+		}
+		if err != nil {
+			t.Errorf("ParseTrustedProxies(%q): %v", tc.spec, err)
+			continue
+		}
+		if tp.Configured() != tc.configured {
+			t.Errorf("ParseTrustedProxies(%q).Configured() = %v, want %v", tc.spec, tp.Configured(), tc.configured)
 		}
 	}
-	t.Fatal("a chain with an unparseable hop let the client mint a fresh limiter key per request")
 }
 
 // TestAuditRecordsTheRealClientBehindAProxy: the audit trail keys on the same
