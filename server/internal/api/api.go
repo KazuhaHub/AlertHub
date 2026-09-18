@@ -27,6 +27,7 @@ import (
 	"github.com/KazuhaHub/AlertHub/server/internal/store"
 	"github.com/KazuhaHub/AlertHub/server/internal/twofa"
 	"github.com/KazuhaHub/AlertHub/server/internal/webadmin"
+	"github.com/KazuhaHub/authcore/clientip"
 )
 
 const (
@@ -50,8 +51,10 @@ type Server struct {
 	WebDir         string
 
 	// TrustedProxies decides whether X-Forwarded-For may be believed. The zero
-	// value trusts nothing, which is how every release before it behaved.
-	TrustedProxies TrustedProxies
+	// value trusts nothing, which is how every release before it behaved. The
+	// walk and the trust boundary live in authcore/clientip so that this server
+	// and the panel resolve a client address the same way.
+	TrustedProxies clientip.TrustedProxies
 
 	// Browser-client bootstrap info served at /pubkey (SPEC §7/§8). The client
 	// MQTT password is not a real secret in a browser — the trust anchor is the
