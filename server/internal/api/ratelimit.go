@@ -56,8 +56,8 @@ func (rl *rateLimiter) allow(key string) bool {
 //
 // X-Forwarded-For is believed only when the request arrived from a peer listed in
 // ALERTHUB_TRUSTED_PROXIES; with none configured this is the TCP peer address,
-// exactly as it was before that setting existed. See clientip.TrustedProxies for
-// why getting this wrong breaks the limiter in both directions.
+// exactly as it was before that setting existed. See TrustedProxies for why
+// getting this wrong breaks the limiter in both directions.
 func (s *Server) clientIP(r *http.Request) string {
 	return s.TrustedProxies.ClientIP(r)
 }

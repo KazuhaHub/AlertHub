@@ -36,7 +36,6 @@ import (
 	"github.com/KazuhaHub/AlertHub/server/internal/store"
 	"github.com/KazuhaHub/AlertHub/server/internal/twofa"
 	"github.com/KazuhaHub/AlertHub/server/internal/watchdog"
-	"github.com/KazuhaHub/authcore/clientip"
 )
 
 func env(k, def string) string {
@@ -236,7 +235,7 @@ func main() {
 	// Default: a proxy on the same host. That is the deployment SECURITY.md
 	// describes, and spoofing X-Forwarded-For past it requires already being on
 	// the machine. Set "none" to key on the TCP peer unconditionally.
-	trustedProxies, err := clientip.Parse(env("ALERTHUB_TRUSTED_PROXIES", "loopback"))
+	trustedProxies, err := api.ParseTrustedProxies(env("ALERTHUB_TRUSTED_PROXIES", "loopback"))
 	if err != nil {
 		// Falling back means the limiter keys on the proxy again, so say exactly
 		// what that costs instead of letting a typo quietly undo the setting.
@@ -244,7 +243,7 @@ func main() {
 			"Behind a reverse proxy every client now shares one rate-limit bucket "+
 			"and the audit trail records the proxy address",
 			"err", err)
-		trustedProxies = clientip.TrustedProxies{}
+		trustedProxies = api.TrustedProxies{}
 	}
 	switch {
 	case trustedProxies.Configured():
