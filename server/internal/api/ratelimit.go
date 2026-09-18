@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log/slog"
 	"net/http"
 	"strconv"
 	"sync"
@@ -59,7 +60,33 @@ func (rl *rateLimiter) allow(key string) bool {
 // exactly as it was before that setting existed. See TrustedProxies for why
 // getting this wrong breaks the limiter in both directions.
 func (s *Server) clientIP(r *http.Request) string {
+	s.warnOnceIfProxyUndeclared(r)
 	return s.TrustedProxies.ClientIP(r)
+}
+
+// warnOnceIfProxyUndeclared says so, once, when a forwarded request arrives from
+// a peer that is not a trusted proxy.
+//
+// This is the shape of deployment that produced this server's own rate-limiter
+// defect and kept it quiet: a reverse proxy in front, ALERTHUB_TRUSTED_PROXIES
+// left at its default, and a limiter that keyed every request on the proxy. It
+// read as working -- the limiter counted, the audit rows had an IP column, and
+// both were about the proxy. The setting being *absent* is not something a
+// startup check can catch, because the panel cannot know a proxy exists until a
+// request comes through one.
+//
+// Refusing the header stays correct. Saying nothing does not.
+func (s *Server) warnOnceIfProxyUndeclared(r *http.Request) {
+	if !s.TrustedProxies.ForwardedFromUntrustedPeer(r) {
+		return
+	}
+	s.proxyWarned.Do(func() {
+		slog.Warn("a request carried X-Forwarded-For from a peer that is not a trusted proxy, "+
+			"so the header was ignored and every client behind that proxy is being recorded "+
+			"under the proxy's own address; the rate limiter and the audit trail both key on it. "+
+			"Set ALERTHUB_TRUSTED_PROXIES to the proxy's addresses, or to \"none\" if there is no proxy.",
+			"peer", hostOnly(r.RemoteAddr))
+	})
 }
 
 // rateLimit wraps h, rejecting a client (keyed by IP) that exceeds rl with 429 +
