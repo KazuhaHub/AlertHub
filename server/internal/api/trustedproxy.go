@@ -100,6 +100,25 @@ func hostOnly(addr string) string {
 	return addr
 }
 
+// ForwardedFromUntrustedPeer reports whether the request carries
+// X-Forwarded-For while arriving from a peer this set does not trust.
+//
+// That combination means there is a reverse proxy in front of this server and
+// the server has not been told to believe it. Discarding the header is still the
+// right response -- believing an unvouched-for peer would let anyone claim any
+// address -- but staying silent about it is not, and silence is what let this
+// server's own rate-limiter defect sit unnoticed: every request was attributed
+// to the proxy, identically, and the column looked populated rather than wrong.
+//
+// This is the signal, not the response. It is reported per request and holds no
+// state, so a caller that wants "has this ever happened" keeps its own flag.
+func (tp TrustedProxies) ForwardedFromUntrustedPeer(r *http.Request) bool {
+	if len(r.Header.Values("X-Forwarded-For")) == 0 {
+		return false
+	}
+	return !tp.trusts(net.ParseIP(hostOnly(r.RemoteAddr)))
+}
+
 // ClientIP returns the address the rate limiter should key on.
 //
 // With no trusted proxies it is the TCP peer, unchanged. Otherwise the
